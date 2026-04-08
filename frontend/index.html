@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Package Tracker</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      margin: 2rem;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+    .container {
+      max-width: 400px;
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    h2 {
+      margin-top: 0;
+      margin-bottom: 0.5rem;
+    }
+    label {
+      font-weight: 600;
+      font-size: 0.9rem;
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+    select, input {
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      background-color: white;
+    }
+    select:focus, input:focus {
+      outline: none;
+      border-color: #0056b3;
+      box-shadow: 0 0 0 2px rgba(0, 86, 179, 0.2);
+    }
+    .track-btn {
+      display: block;
+      width: 100%;
+      padding: 0.75rem;
+      background-color: #0056b3;
+      color: white;
+      text-align: center;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: bold;
+      transition: background-color 0.2s;
+      box-sizing: border-box;
+      cursor: pointer;
+      border: none;
+    }
+    .track-btn:hover:not(.disabled) {
+      background-color: #004494;
+    }
+    .track-btn.disabled {
+      background-color: #cccccc;
+      color: #666666;
+      pointer-events: none;
+      cursor: not-allowed;
+    }
+    .result-display {
+      font-size: 0.9rem;
+      color: #333;
+      word-break: break-word;
+      background: #f1f5f9;
+      padding: 1rem;
+      border-radius: 4px;
+      border: 1px solid #e2e8f0;
+      display: none; /* Hidden until needed */
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Track a Package</h2>
+    
+    <div>
+      <label for="carrier">Carrier</label>
+      <select id="carrier">
+        <option value="usps">USPS</option>
+        <option value="ups">UPS</option>
+        <option value="fedex">FedEx</option>
+        <option value="dhl">DHL</option>
+        <option value="tnt">TNT</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="trackingNum">Tracking Number</label>
+      <input type="text" id="trackingNum" placeholder="e.g. 9400100000000000000000">
+    </div>
+
+    <button id="trackBtn" class="track-btn disabled">Track Package</button>
+
+    <div id="resultDisplay" class="result-display"></div>
+  </div>
+
+  <script>
+    // DOM Elements
+    const carrierSelect = document.getElementById('carrier');
+    const trackingInput = document.getElementById('trackingNum');
+    const trackBtn = document.getElementById('trackBtn');
+    const resultDisplay = document.getElementById('resultDisplay');
+
+    // Handle the tracking request
+    trackBtn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      
+      const carrier = carrierSelect.value;
+      const trackingNum = trackingInput.value.trim();
+
+      if (!trackingNum) return;
+
+      // Update UI to show loading state
+      trackBtn.textContent = "Scraping data... 🤖";
+      trackBtn.classList.add('disabled');
+      resultDisplay.style.display = 'block';
+      resultDisplay.innerHTML = "<em>Sending robot to carrier website... This may take a few seconds.</em>";
+
+      try {
+        // Call the local Node.js backend
+        const response = await fetch(`http://localhost:3000/api/track/${carrier}/${trackingNum}`);
+        const data = await response.json();
+
+        if (response.ok) {
+          // Success: Display the scraped status
+          resultDisplay.innerHTML = `<strong>Carrier:</strong> ${carrier.toUpperCase()}<br><strong>Status:</strong> <span style="color: #0056b3;">${data.status}</span>`;
+        } else {
+          // Server returned an error (e.g., carrier not implemented yet)
+          resultDisplay.innerHTML = `<span style="color: #d32f2f;"><strong>Error:</strong> ${data.error}</span>`;
+        }
+      } catch (error) {
+        // Network error (backend isn't running)
+        resultDisplay.innerHTML = `<span style="color: #d32f2f;"><strong>Connection Error:</strong> Could not reach the backend server. Make sure you are running 'node server.js' in your terminal.</span>`;
+      } finally {
+        // Reset the button state
+        trackBtn.textContent = "Track Package";
+        trackBtn.classList.remove('disabled');
+      }
+    });
+
+    // Enable/disable the button based on input
+    trackingInput.addEventListener('input', () => {
+      if (trackingInput.value.trim()) {
+        trackBtn.classList.remove('disabled');
+      } else {
+        trackBtn.classList.add('disabled');
+        // Hide the result box if the user clears the input
+        resultDisplay.style.display = 'none'; 
+      }
+    });
+  </script>
+
+</body>
+</html>
