@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Package Tracker</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      margin: 2rem;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+    .container {
+      max-width: 400px;
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    h2 {
+      margin-top: 0;
+      margin-bottom: 0.5rem;
+    }
+    label {
+      font-weight: 600;
+      font-size: 0.9rem;
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+    /* This styles both the dropdown menu and the text box */
+    select, input {
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      background-color: white; /* Ensures the dropdown looks clickable */
+    }
+    select:focus, input:focus {
+      outline: none;
+      border-color: #0056b3;
+      box-shadow: 0 0 0 2px rgba(0, 86, 179, 0.2);
+    }
+    .track-btn {
+      display: block;
+      width: 100%;
+      padding: 0.75rem;
+      background-color: #0056b3;
+      color: white;
+      text-align: center;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: bold;
+      transition: background-color 0.2s;
+      box-sizing: border-box;
+    }
+    .track-btn:hover:not(.disabled) {
+      background-color: #004494;
+    }
+    .track-btn.disabled {
+      background-color: #cccccc;
+      color: #666666;
+      pointer-events: none;
+      cursor: not-allowed;
+    }
+    .raw-url {
+      font-size: 0.8rem;
+      color: #555;
+      word-break: break-all;
+      background: #f1f5f9;
+      padding: 0.75rem;
+      border-radius: 4px;
+      border: 1px solid #e2e8f0;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Track a Package</h2>
+    
+    <div>
+      <label for="carrier">Carrier</label>
+      <select id="carrier">
+        <option value="dhl">DHL</option>
+        <option value="ups">UPS</option>
+        <option value="tnt">TNT</option>
+        <option value="usps">USPS</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="trackingNum">Tracking Number</label>
+      <input type="text" id="trackingNum" placeholder="e.g. 1Z9999999999999999">
+    </div>
+
+    <a href="#" id="trackBtn" class="track-btn disabled" target="_blank" rel="noopener noreferrer">Track Package</a>
+
+    <div id="urlDisplay" class="raw-url"></div>
+  </div>
+
+  <script>
+    const templates = {
+      dhl: "https://www.dhl.com/us-en/home/tracking.html?locale=true&submit=1&tracking-id=[custom tracking number]",
+      ups: "https://www.ups.com/track?loc=en_US&tracknum=[custom tracking number]&requester=WT/trackdetails",
+      tnt: "https://www.tnt.com/express/en_gb/site/shipping-tools/tracking.html?source=public_menu&cons=[custom tracking number]&searchType=CON&commit=Track!",
+      usps: "https://tools.usps.com/go/TrackConfirmAction.action?qtc_tLabels1=[custom tracking number]"
+    };
+
+    const carrierSelect = document.getElementById('carrier');
+    const trackingInput = document.getElementById('trackingNum');
+    const trackBtn = document.getElementById('trackBtn');
+    const urlDisplay = document.getElementById('urlDisplay');
+
+    function updateLink() {
+      const carrier = carrierSelect.value;
+      const trackingNum = trackingInput.value.trim();
+
+      if (trackingNum) {
+        const encodedNum = encodeURIComponent(trackingNum);
+        const finalUrl = templates[carrier].replace('[custom tracking number]', encodedNum);
+        
+        trackBtn.href = finalUrl;
+        trackBtn.classList.remove('disabled');
+        urlDisplay.textContent = finalUrl;
+        urlDisplay.style.display = 'block';
+      } else {
+        trackBtn.removeAttribute('href');
+        trackBtn.classList.add('disabled');
+        urlDisplay.style.display = 'none';
+      }
+    }
+
+    carrierSelect.addEventListener('change', updateLink);
+    trackingInput.addEventListener('input', updateLink);
+  </script>
+
+</body>
+</html>
