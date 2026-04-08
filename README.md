@@ -1,7 +1,7 @@
-# 📦 Package Tracker
+# 📦 Tracking Jack
 
 ## Description
-Package Tracker is a full-stack application designed to retrieve real-time package statuses. It utilizes a vanilla web frontend and a Node.js backend that acts as a web scraper. The application currently supports scraping tracking details directly from the USPS website using headless Chrome.
+Tracking Jack is a full-stack application designed to retrieve real-time package statuses. It utilizes a vanilla web frontend and a Node.js backend that acts as a web scraper. The application currently supports scraping tracking details directly from the USPS website using headless Chrome.
 
 ## Table of Contents
 - [Features](#features)
@@ -25,8 +25,8 @@ Package Tracker is a full-stack application designed to retrieve real-time packa
 
 1. **Clone the repository:**
    ```bash
-   git clone [https://github.com/yourusername/package-tracker.git](https://github.com/yourusername/package-tracker.git)
-   cd package-tracker
+   git clone https://github.com/mtepenner/tracking-jack.git
+   cd tracking-jack
    ```
 
 2. **Install backend dependencies:**
