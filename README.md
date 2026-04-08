@@ -8,7 +8,6 @@ Tracking Jack is a full-stack application designed to retrieve real-time package
 - [Technologies Used](#technologies-used)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Future Implementations](#future-implementations)
 - [License](#license)
 
 ## 🚀 Features
@@ -49,12 +48,9 @@ Tracking Jack is a full-stack application designed to retrieve real-time package
    Open `frontend/index.html` in your preferred web browser.
 
 3. **Track a package:**
-   - Select **USPS** from the carrier dropdown.
+   - Select your carrier from the carrier dropdown.
    - Enter your tracking number.
    - Click **Track Package** to view the current status.
-
-## 🔮 Future Implementations
-Currently, the application supports USPS web scraping. Support for UPS, FedEx, DHL, and TNT is planned for future releases. 
 
 ## 📄 License
 This project is licensed under the [MIT License](LICENSE) - see the LICENSE file for details.
