@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Package Tracker</title>
+  <title>Tracking Jack: The Definitive Package Tracker</title>
   <style>
     body {
       font-family: system-ui, -apple-system, sans-serif;
@@ -31,7 +31,6 @@
       display: block;
       margin-bottom: 0.25rem;
     }
-    /* This styles both the dropdown menu and the text box */
     select, input {
       width: 100%;
       padding: 0.75rem;
@@ -39,7 +38,7 @@
       border: 1px solid #ccc;
       border-radius: 4px;
       box-sizing: border-box;
-      background-color: white; /* Ensures the dropdown looks clickable */
+      background-color: white;
     }
     select:focus, input:focus {
       outline: none;
@@ -92,6 +91,7 @@
         <option value="ups">UPS</option>
         <option value="tnt">TNT</option>
         <option value="usps">USPS</option>
+        <option value="fedex">FedEx</option>
       </select>
     </div>
 
@@ -110,7 +110,8 @@
       dhl: "https://www.dhl.com/us-en/home/tracking.html?locale=true&submit=1&tracking-id=[custom tracking number]",
       ups: "https://www.ups.com/track?loc=en_US&tracknum=[custom tracking number]&requester=WT/trackdetails",
       tnt: "https://www.tnt.com/express/en_gb/site/shipping-tools/tracking.html?source=public_menu&cons=[custom tracking number]&searchType=CON&commit=Track!",
-      usps: "https://tools.usps.com/go/TrackConfirmAction.action?qtc_tLabels1=[custom tracking number]"
+      usps: "https://tools.usps.com/go/TrackConfirmAction.action?qtc_tLabels1=[custom tracking number]",
+      fedex: "https://www.fedex.com/fedextrack/?trknbr=[custom tracking number]"
     };
 
     const carrierSelect = document.getElementById('carrier');
